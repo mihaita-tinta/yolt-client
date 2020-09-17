@@ -1,0 +1,7 @@
+/src/main/resources/public-key.pem
+/src/main/resources/sandbox/
+/src/main/resources/tls-certificate.pem
+/src/main/resources/tls-csr.pem
+/src/main/resources/tls-private-key.pem
+/src/main/resources/tls-certificate.der
+/src/main/resources/private-key.pem

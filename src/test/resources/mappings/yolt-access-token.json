@@ -1,0 +1,24 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/v1/tokens",
+    "queryParameters" : {
+      "request_token" : {
+        "matches" : "(.*)"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json",
+      "Cache-Control": "no-cache"
+    },
+    "jsonBody": {
+      "access_token": "dummy_access_token",
+      "expires_in": 600,
+      "scope": "dummy_scope",
+      "token_type": "Bearer"
+    }
+  }
+}
