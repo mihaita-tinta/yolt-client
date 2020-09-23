@@ -5,6 +5,7 @@ import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.jwt.JwtClaims;
 import org.jose4j.jwt.NumericDate;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,12 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class RequestTokenService {
     private static final Logger log = getLogger(RequestTokenService.class);
 
-    String getToken() {
+    @Value("${yolt.client-id}")
+    String clientId;
+    @Value("${yolt.key-id}")
+    String keyId;
+
+    public String getToken() {
         try {
             byte[] pem = Files.readAllBytes(Paths.get(new ClassPathResource("sandbox/private-key.pem").getFile().getAbsolutePath()));
             byte[] keyBytes = parseDERFromPEM(pem, "-----BEGIN PRIVATE KEY-----", "-----END PRIVATE KEY-----");
@@ -34,14 +40,14 @@ public class RequestTokenService {
             NumericDate iatNumericDate = NumericDate.now();
 
             iatNumericDate.addSeconds(-1);
-            claims.setIssuer("758fe252-caa1-4afe-af54-6aee0590c42e");
+            claims.setIssuer(clientId);
             claims.setJwtId(nonce);
             claims.setIssuedAt(iatNumericDate);
 
             JsonWebSignature jws = new JsonWebSignature();
             jws.setPayload(claims.toJson());
             jws.setKey(key);
-            jws.setKeyIdHeaderValue("e2292eb3-b54b-4fe3-8b2b-6c94e8f4c9fa");
+            jws.setKeyIdHeaderValue(keyId);
             jws.setAlgorithmHeaderValue(AlgorithmIdentifiers.RSA_USING_SHA256);
             return jws.getCompactSerialization();
         } catch (Exception e) {

@@ -264,7 +264,71 @@ In some cases you need to retry for only specific exceptions
 
 ### Automatically record stubs
 
+_WireMock can create stub mappings from requests it has received. Combined with its proxying feature this allows you to [record](http://wiremock.org/docs/record-playback/) stub mappings from interaction with existing APIs._
 
+![wiremock record](./wiremock-record.svg)
+
+Our `local-sandbox` folder contains a `docker` environment.
+This contains:
+* `my-wiremock` a [customized](https://github.com/mihaita-tinta/wiremock-body-transformer) wiremock instance
+* `routing` just a proxy calling the `Yolt` sandbox instance with some tls certificates required for mTLS (These files you should already have from the Yolt onboarding steps)
+  You need to place them in the here: `local-sandbox/routing/tls-certificate.pem` and `local-sandbox/routing/tls-private-key.pem` and then build your own `routing` image for your own `yolt` client
+
+```shell script
+docker-compose up
+```
+
+![local ](./local-sandbox.png)
+
+The next step is to configure `wiremock` to start recording the traffic it gets.
+Go [here](http://localhost:8080/__admin/recorder/)
+![local ](./wiremock-recorder.png)
+
+Generate some traffic. Make sure to point to the running wiremock instance: `yolt.host=http://localhost:8080`
+```java
+@SpringBootTest
+class BusinessServiceTest {
+    private static final Logger log = LoggerFactory.getLogger(BusinessServiceTest.class);
+
+    @Autowired
+    BusinessService service;
+
+    @Test
+    public void test() {
+        service.automaticallyGetAccounts()
+                .log()
+                .blockLast();
+    }
+}
+```
+Only after stopping the recording `wiremock` generated the stub files.
+![recorded ](./wiremock-recorded.png)
+
+They can be found in the wiremock `mappings` folder
+
+![recorded ](./auto-generated-stubs.png)
+
+With our [custom wiremock extension](https://github.com/mihaita-tinta/wiremock-body-transformer) we can add different functionalities using `thymeleaf` expressions.
+This can create lists with different lengths, create/read JWTs, store variables, work with dates, UUIDs, counters etc
+
+```json
+{"session": [
+          [# th:each="element,index : ${session}" ]
+            "[(${element.key})]" : "[(${element.value})]"[# th:if="!${index.last}" ],[/]
+          [/]
+          [# th:each="element,index : ${utils.list(5)}" ]
+            "key-[(${index.current})]": [(${index.current})]
+          [# th:if="!${index.last}" ],[/]
+          [/]
+          ,"jwt":"[(${utils.jwt('123')})]",
+          "var":"[(${utils.accessToken(xjwt).getClaimValue('sub')})]",
+          "date":"[(${#temporals.formatISO(#temporals.createNow())})]",
+          "counter1":"[(${counter.incrementAndGet()})]", "counter2":"[(${counter.incrementAndGet()})]",
+          "random":"[(${utils.random().nextInt(1000)})]",
+          "uuid":"[(${utils.uuid()})]"
+    ]
+}
+```
 ### Testing our own API
 
 One way to test our API is to connect it to a local wiremock instance statically configured by us.
@@ -313,4 +377,23 @@ public class SiteResourceTest {
 }
 ```
 
+Sample groovy contract:
+
+```groovy
+import org.springframework.cloud.contract.spec.Contract
+
+Contract.make {
+    request {
+        method 'GET'
+        urlPath('/sites') 
+    }
+    response {
+        status 200
+        body('''[{"id":"site-id-12345","name":"Yolt Test Bank"}]''')
+        headers {
+            header('''Content-Type''', '''application/json''')
+        }
+    }
+}
+```
 

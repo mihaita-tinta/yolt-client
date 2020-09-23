@@ -33,9 +33,9 @@ public class HttpConfiguration {
     @Bean
     @Primary
     public WebClient apiClient() throws InvalidKeySpecException, NoSuchAlgorithmException, CertificateException, IOException {
-        byte[] pem = Files.readAllBytes(Paths.get(new ClassPathResource("tls-private-key.pem").getFile().getAbsolutePath()));
+        byte[] pem = Files.readAllBytes(Paths.get(new ClassPathResource("sandbox/tls-private-key.pem").getFile().getAbsolutePath()));
         byte[] keyBytes = parseDERFromPEM(pem, "-----BEGIN PRIVATE KEY-----", "-----END PRIVATE KEY-----");
-        byte[] cer = Files.readAllBytes(Paths.get(new ClassPathResource("tls-certificate.pem").getFile().getAbsolutePath()));
+        byte[] cer = Files.readAllBytes(Paths.get(new ClassPathResource("sandbox/tls-certificate.pem").getFile().getAbsolutePath()));
         byte[] cerBytes = parseDERFromPEM(cer, "-----BEGIN CERTIFICATE-----", "-----END CERTIFICATE-----");
 
         RSAPrivateKey privateKey = Securities.generatePrivateKeyFromDER(keyBytes);
@@ -58,12 +58,10 @@ public class HttpConfiguration {
 
 
     @Bean
-    public WebClient getWebClientSandbox() {
-        ClientHttpConnector connector = new ReactorClientHttpConnector(HttpClient.create());
-
+    public WebClient sandboxClient() {
         return WebClient.builder()
                 .baseUrl("https://yoltbank.sandbox.yolt.io")
-                .clientConnector(connector)
+                .clientConnector(new ReactorClientHttpConnector(HttpClient.create()))
                 .build();
     }
 

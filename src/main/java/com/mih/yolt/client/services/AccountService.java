@@ -11,7 +11,6 @@ import reactor.core.publisher.Flux;
 
 @Service
 public class AccountService {
-
     private final WebClient apiClient;
 
     public AccountService(WebClient apiClient) {

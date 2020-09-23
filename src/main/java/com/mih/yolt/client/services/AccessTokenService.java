@@ -5,6 +5,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -15,7 +16,9 @@ public class AccessTokenService {
         this.apiClient = apiClient;
     }
 
-    public Mono<AccessToken> getYoltAccessToken(String requestToken) {
+    public Mono<AccessToken> getAccessToken(String requestToken) {
+        // FIXME the access token should be cached until it expires
+        // and only then we should request a new one
         return apiClient.post()
                 .uri(uriBuilder -> uriBuilder
                         .path("/v1/tokens")
@@ -23,7 +26,15 @@ public class AccessTokenService {
                         .queryParam("grant_type", "client_credentials")
                         .build())
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                .retrieve()
-                .bodyToMono(AccessToken.class);
+                .exchange()
+                .flatMap(res -> {
+
+                    if (res.statusCode().is2xxSuccessful())
+                        return res.bodyToMono(AccessToken.class);
+
+                    return res.bodyToMono(String.class)
+                            .flatMap(s -> Mono.error(new IllegalArgumentException("error: " + s)));
+
+                });
     }
 }

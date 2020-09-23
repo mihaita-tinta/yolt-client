@@ -15,6 +15,10 @@ public class AccessToken {
         return accessToken;
     }
 
+    public String getAuthorizationHeaderValue() {
+        return getTokenType() + " " + getAccessToken();
+    }
+
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
     }

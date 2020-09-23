@@ -23,4 +23,10 @@ public class RedirectUrl {
         String[] arr = url.split("=");
         return arr[arr.length - 1];
     }
+
+    public static RedirectUrl of(String url) {
+        RedirectUrl redirectUrl = new RedirectUrl();
+        redirectUrl.url = url;
+        return redirectUrl;
+    }
 }
