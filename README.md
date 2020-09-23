@@ -329,6 +329,23 @@ This can create lists with different lengths, create/read JWTs, store variables,
     ]
 }
 ```
+Output:
+```json
+{"session": [
+          "key-0": 0,
+          "key-1": 1,
+          "key-2": 2,
+          "key-3": 3,
+          "key-4": 4,
+          "jwt":"eyJhbGciOiJSUzI1NiJ9.eyJleHAiOjE2MDA4NTcxMTEsImp0aSI6Im1PbDZ3MUJYTloxc0hqb041Mk9BQ1EiLCJpYXQiOjE2MDA4NTY1MTEsIm5iZiI6MTYwMDg1NjM5MSwic3ViIjoiMTIzIn0.TIKEsDl6QxVay4-EpztAKYZmMAjCFirU-mrZniq9ZUtYnfK8h97xpRE7IcxCT17C4RVJBJ45CEBFK3X5loLKJu-5XUjUQX-_ghHAsHkAEQmSMgEQZY5NBce8G6CCR_qKcUxk1ryuXhmVf45G7uK8MOazb_rDae-Zo1z10IJbSxOjOQ6V56TkDAH_3fHcaZKoHGswF8bxVvbUseZCI7so2VX_vt1bipI_hBgiDG9ThiUZZFhyqpNs2-DYnUrexx2rEEAFX8Cz0-rZRsbimqFSaKA4mg24w8rvFzjxfaoSArny1p0iRy8_o0tLwKHoFeqsqizMRyhWFgKEObBWQZEQIw",
+          "var":"123",
+          "date":"2020-09-23T10:21:51.153+0000",
+          "counter1":"1", "counter2":"2",
+          "random":"211",
+          "uuid":"9d57db85-0acf-40e0-9ac0-2f857a520713"
+    ]
+}
+```
 ### Testing our own API
 
 One way to test our API is to connect it to a local wiremock instance statically configured by us.
