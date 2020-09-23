@@ -35,7 +35,7 @@ public class BusinessService {
         String requestToken = requestTokenService.getToken();
 
         return accessTokenService.getAccessToken(requestToken)
-                .flatMapMany(accessToken -> userService.getUser(accessToken)
+                .flatMapMany(accessToken -> userService.createUser(accessToken)
                                        .flatMapMany(user -> siteService.getSites()
                                                         .map(list -> list.get(0))
                                                .flatMap(site -> userSiteService.getRedirectUrl(accessToken, user, site))
@@ -50,6 +50,21 @@ public class BusinessService {
                                                })
 
                                        ));
+    }
+
+    public Mono<String> createUserGetSitesAndGetRedirectUrl() {
+        String requestToken = requestTokenService.getToken();
+        return accessTokenService.getAccessToken(requestToken)
+                .log()
+                .flatMap(accessToken -> userService.createUser(accessToken)
+                                .log()
+                                .flatMap(user -> siteService.getSites()
+                                        .map(list -> list.get(0))
+                                        .flatMap(site -> userSiteService.getRedirectUrl(accessToken, user, site))
+                                        .map(RedirectResponse ::getRedirect)
+                                        .map(RedirectUrl::getUrl)
+
+                                ));
     }
 
 }

@@ -17,7 +17,7 @@ public class UserService {
         this.apiClient = apiClient;
     }
 
-    public Mono<User> getUser(AccessToken accessToken) {
+    public Mono<User> createUser(AccessToken accessToken) {
         return apiClient.post()
                 .uri(uriBuilder -> uriBuilder
                         .path("/v2/users")

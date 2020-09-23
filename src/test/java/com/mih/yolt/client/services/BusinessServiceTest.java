@@ -16,6 +16,13 @@ class BusinessServiceTest {
     BusinessService service;
 
     @Test
+    public void testCreateUserGetSitesAndGetRedirectUrl() {
+        service.createUserGetSitesAndGetRedirectUrl()
+                .log()
+                .block();
+    }
+
+    @Test
     public void test() {
         service.automaticallyGetAccounts()
                 .log()
@@ -28,4 +35,6 @@ class BusinessServiceTest {
                 .log()
                 .blockLast();
     }
+
+
 }
