@@ -346,6 +346,85 @@ Output:
     ]
 }
 ```
+
+To apply this for the `accounts` endpoint we can get
+```json
+[
+[# th:each="element,index : ${utils.list(utils.random().nextInt(5))}" ]
+{"id": "[(${utils.uuid()})]",
+"accountHolder": "John Doe Account-[(${index.current})]",
+"accountReferences": {
+  "bban": "5390 0754 703[(${index.current})]",
+  "iban": "NL79ABNA945576281[(${index.current})]",
+  "maskedPan": "XXXXXXXXXX1234",
+  "pan": "5500000000000004"
+  },
+"balance": [(${utils.random().nextInt(1000)})],
+"bankSpecific": {
+"additionalProp1": "string",
+"additionalProp2": "string",
+"additionalProp3": "string"
+},
+"creditCardAccount": {
+"availableCredit": 200.0,
+"creditLimit": 1000.0,
+"linkedAccount": "14H8IY710471984729847"
+},
+"currency": "EUR",
+"externalId": "14H8IY710471984729847",
+"interestRate": 0.04,
+"name": "John's Credit Card Account-[(${index.current})]",
+"product": "Gold account.",
+"status": "ENABLED",
+"type": "CREDIT_CARD",
+"usage": "PRIV",
+"userSite": {
+"siteId": "be44b325-de6d-4993-81a9-2c67e6230253",
+"userSiteId": "be44b325-de6d-4123-81a9-2c67e6230253"
+}
+}
+ [# th:if="!${index.last}" ],[/]
+[/]
+]
+```
+Output
+```json
+[
+  {
+    "id": "59c97ad7-4979-4730-984c-483024bb2386",
+    "accountHolder": "John Doe Account-0",
+    "accountReferences": {
+      "bban": "5390 0754 7030",
+      "iban": "NL79ABNA9455762810",
+      "maskedPan": "XXXXXXXXXX1234",
+      "pan": "5500000000000004"
+    },
+    "balance": 111,
+    "bankSpecific": {
+      "additionalProp1": "string",
+      "additionalProp2": "string",
+      "additionalProp3": "string"
+    },
+    "creditCardAccount": {
+      "availableCredit": 200.0,
+      "creditLimit": 1000.0,
+      "linkedAccount": "14H8IY710471984729847"
+    },
+    "currency": "EUR",
+    "externalId": "14H8IY710471984729847",
+    "interestRate": 0.04,
+    "name": "John's Credit Card Account-0",
+    "product": "Gold account.",
+    "status": "ENABLED",
+    "type": "CREDIT_CARD",
+    "usage": "PRIV",
+    "userSite": {
+      "siteId": "be44b325-de6d-4993-81a9-2c67e6230253",
+      "userSiteId": "be44b325-de6d-4123-81a9-2c67e6230253"
+    }
+  }
+]
+```
 ### Testing our own API
 
 One way to test our API is to connect it to a local wiremock instance statically configured by us.

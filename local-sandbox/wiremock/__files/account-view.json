@@ -1,12 +1,12 @@
 [
 [# th:each="element,index : ${utils.list(utils.random().nextInt(5))}" ]
-{
+{"id": "[(${utils.uuid()})]",
 "accountHolder": "John Doe Account-[(${index.current})]",
 "accountReferences": {
   "bban": "5390 0754 703[(${index.current})]",
   "iban": "NL79ABNA945576281[(${index.current})]",
   "maskedPan": "XXXXXXXXXX1234",
-  "pan": "5500000000000004",
+  "pan": "5500000000000004"
   },
 "balance": [(${utils.random().nextInt(1000)})],
 "bankSpecific": {
@@ -21,7 +21,6 @@
 },
 "currency": "EUR",
 "externalId": "14H8IY710471984729847",
-"id": "[(${id})]",
 "interestRate": 0.04,
 "name": "John's Credit Card Account-[(${index.current})]",
 "product": "Gold account.",
