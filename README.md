@@ -257,7 +257,60 @@ public void testRetryBackoff() {
     }
 ```
 
-In some cases you need to retry for only specific situations
+In some cases you need to retry for only specific exceptions
 
 `.retryWhen(anyOf(WebClientResponseException.ServiceUnavailable.class)
                                                 .exponentialBackoff(ofMillis(10), ofMillis(1000)).retryMax(2))`
+
+### Automatically record stubs
+
+
+### Testing our own API
+
+One way to test our API is to connect it to a local wiremock instance statically configured by us.
+Based on some existing conditions _what `Yolt` returns_, we can create various contracts for our API.
+
+The end result for our test below is that we are creating an *up to date* documentation based on our `asciidocs` file.
+This means that everytime we change our tests we are also updating the content of our requests and responses.
+In practice we should have an 1-1 documentation with what the application does.
+
+![asciidocs](./asciidocs.png)
+
+
+We are also creating the [stubs](https://cloud.spring.io/spring-cloud-contract/reference/html/project-features.html#features-stub-runner)
+that can be used by our own clients (someone calling our Yolt-Client API).
+This means that it will be very easy for someone to integrate with us, because all their implementation should be done based on the contracts we define.
+_If there will be any stubs available from Yolt at some point, we could do the same._
+
+```java
+@RunWith(SpringRunner.class)
+@SpringBootTest(properties = "yolt.host=http://localhost:${wiremock.server.port}")
+@AutoConfigureRestDocs
+@AutoConfigureWebTestClient
+@AutoConfigureWireMock(port = 0)
+public class SiteResourceTest {
+
+    @Autowired
+    private WebTestClient client;
+
+    @Test
+    public void listSites() {
+
+
+        client.get()
+                .uri("/sites")
+                .exchange()
+                .expectStatus()
+                .is2xxSuccessful()
+                .expectBody()
+                .consumeWith(s -> System.out.println(new String(s.getResponseBody())))
+                .jsonPath("$[0].id").isEqualTo("site-id-12345")
+                .jsonPath("$.length()").isEqualTo(1)
+                .consumeWith(document("sites-get", SpringCloudContractRestDocs.dslContract()));
+
+    }
+
+}
+```
+
+
