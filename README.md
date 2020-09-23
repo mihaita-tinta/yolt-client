@@ -311,7 +311,7 @@ They can be found in the wiremock `mappings` folder
 With our [custom wiremock extension](https://github.com/mihaita-tinta/wiremock-body-transformer) we can add different functionalities using `thymeleaf` expressions.
 This can create lists with different lengths, create/read JWTs, store variables, work with dates, UUIDs, counters etc
 
-```json
+```
 {"session": [
           [# th:each="element,index : ${session}" ]
             "[(${element.key})]" : "[(${element.value})]"[# th:if="!${index.last}" ],[/]
@@ -348,7 +348,7 @@ Output:
 ```
 
 To apply this for the `accounts` endpoint we can get
-```json
+```
 [
 [# th:each="element,index : ${utils.list(utils.random().nextInt(5))}" ]
 {"id": "[(${utils.uuid()})]",
