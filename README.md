@@ -160,11 +160,8 @@ class AccessTokenServiceWiremockTest {
 #### Example even/odd calls
 Let's say we want to test what happens if one out of two calls is failing.
 The wiremock state machine is something like this:
-```mermaid
-graph TD
-  A[HttpStatus.OK] -->|odd call| B(HttpStatus.SERVICE_UNAVAILABLE)
-  B -->| even call| A
-```
+
+![Wiremock state machine](./wiremock-state-machine.svg)
 
 In our test we can instruct wiremock on how to perform the transition from one state to another
 
