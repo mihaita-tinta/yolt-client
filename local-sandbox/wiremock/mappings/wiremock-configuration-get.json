@@ -1,0 +1,15 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPattern": "/wiremock-configuration.*"
+    },
+    "response": {
+        "fixedDelayMilliseconds": 200,
+        "status": 200,
+        "bodyFileName": "wiremock-configuration-get.json",
+        "transformers": ["thymeleaf-body-transformer"],
+        "transformerParameters": {
+            "urlRegex" : "/wiremock-configuration"
+        }
+    }
+}

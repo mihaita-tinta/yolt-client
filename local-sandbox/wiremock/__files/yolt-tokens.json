@@ -1,0 +1,6 @@
+{
+  "access_token": "[(${utils.jwt(utils.accessToken(request_token).getClaimValue('sub'))})]",
+  "expires_in": 1000,
+  "scope": "string",
+  "token_type": "string"
+}

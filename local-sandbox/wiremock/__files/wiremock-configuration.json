@@ -1,0 +1,3 @@
+{[(${session.put('numberOfAccounts', numberOfAccounts) != null? "": ""})]
+  "numberOfAccounts" : "[(${numberOfAccounts})]"
+}

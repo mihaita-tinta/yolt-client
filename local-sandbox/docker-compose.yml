@@ -1,0 +1,17 @@
+version: '2.4'
+services:
+  wiremock:
+    image: my-wiremock:0.0.2
+    container_name: 'my-wiremock'
+    command: ["java", "-Xms256m", "-Xmx512m", "-cp", "/var/wiremock/lib/*:/var/wiremock/extensions/*", "com.github.tomakehurst.wiremock.standalone.WireMockServerRunner", "--verbose", "--https-port", "8443", "--max-request-journal-entries", "25000", "--jetty-header-buffer-size", "26384", "--extensions", "com.opentable.extension.BodyTransformer,com.opentable.extension.ThymeleafBodyTransformer"]
+    ports:
+      - '8080:8080'
+    environment:
+      debug: "true"
+    volumes:
+      - "./wiremock:/home/wiremock"
+  routing:
+    image: routing:0.0.1
+    container_name: 'routing'
+    ports:
+      - '8888:8888'

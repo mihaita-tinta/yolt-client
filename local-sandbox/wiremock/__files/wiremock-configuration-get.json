@@ -1,0 +1,16 @@
+{"session": [
+          [# th:each="element,index : ${session}" ]
+            "[(${element.key})]" : "[(${element.value})]"[# th:if="!${index.last}" ],[/]
+          [/]
+          [# th:each="element,index : ${utils.list(5)}" ]
+            "key-[(${index.current})]": [(${index.current})]
+          [# th:if="!${index.last}" ],[/]
+          [/]
+          ,"jwt":"[(${utils.jwt('123')})]",
+          "var":"[(${utils.accessToken(xjwt).getClaimValue('sub')})]",
+          "date":"[(${#temporals.formatISO(#temporals.createNow())})]",
+          "counter1":"[(${counter.incrementAndGet()})]", "counter2":"[(${counter.incrementAndGet()})]",
+          "random":"[(${utils.random().nextInt(1000)})]",
+          "uuid":"[(${utils.uuid()})]"
+    ]
+}
