@@ -493,3 +493,6 @@ Contract.make {
 }
 ```
 
+An automated process describing the interaction between an API producer and an API consumer is [below:](https://cloud.spring.io/spring-cloud-contract/reference/html/project-features.html#features-rest-docs)
+![rest-docs-flow](./rest-docs-flow.png)
+
