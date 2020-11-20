@@ -40,8 +40,17 @@ public class UserSiteService {
                 .header(HttpHeaders.AUTHORIZATION, accessToken.getTokenType() + " " + accessToken.getAccessToken())
                 .header("PSU-IP-Address", "ff39:6773:c03c:48e8:5b49:492a:d198:4b05")
                 .bodyValue(req)
-                .retrieve()
-                .bodyToMono(UserSiteActivateResponse.class);
+                .exchange()
+                .flatMap(res -> {
+                    if (!res.statusCode().is2xxSuccessful()) {
+                        return res.bodyToMono(String.class)
+                                .flatMap(s -> Mono.error(new IllegalArgumentException("error: " + s)));
+
+                    } else {
+                        return res.bodyToMono(UserSiteActivateResponse.class)
+                                .log();
+                    }
+                });
     }
 
 
